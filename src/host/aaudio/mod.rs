@@ -215,9 +215,15 @@ fn configure_for_device(
         builder
     };
     builder = builder.sample_rate(config.sample_rate.0.try_into().unwrap());
+    // match &config.buffer_size {
+    //     BufferSize::Default => builder,
+    //     BufferSize::Fixed(size) => builder.buffer_capacity_in_frames(*size as i32),
+    // }
     match &config.buffer_size {
         BufferSize::Default => builder,
-        BufferSize::Fixed(size) => builder.buffer_capacity_in_frames(*size as i32),
+        BufferSize::Fixed(size) => builder
+            .frames_per_data_callback(*size as i32)
+            .buffer_capacity_in_frames((*size * 2) as i32), // Double-buffering
     }
 }
 
@@ -406,8 +412,8 @@ impl DeviceTrait for Device {
         let builder = ndk::audio::AudioStreamBuilder::new()?
             .direction(ndk::audio::AudioDirection::Input)
             .channel_count(channel_count)
-            .format(format)
-            .performance_mode(ndk::audio::AudioPerformanceMode::LowLatency);
+            .format(format);
+            // .performance_mode(ndk::audio::AudioPerformanceMode::LowLatency);
 
         build_input_stream(
             self,
@@ -456,8 +462,8 @@ impl DeviceTrait for Device {
         let builder = ndk::audio::AudioStreamBuilder::new()?
             .direction(ndk::audio::AudioDirection::Output)
             .channel_count(channel_count)
-            .format(format)
-            .performance_mode(ndk::audio::AudioPerformanceMode::LowLatency);
+            .format(format);
+            // .performance_mode(ndk::audio::AudioPerformanceMode::LowLatency);
 
         build_output_stream(
             self,
