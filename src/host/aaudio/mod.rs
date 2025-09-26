@@ -412,8 +412,8 @@ impl DeviceTrait for Device {
         let builder = ndk::audio::AudioStreamBuilder::new()?
             .direction(ndk::audio::AudioDirection::Input)
             .channel_count(channel_count)
-            .format(format);
-            // .performance_mode(ndk::audio::AudioPerformanceMode::LowLatency);
+            .format(format)
+            .performance_mode(ndk::audio::AudioPerformanceMode::LowLatency);
 
         build_input_stream(
             self,
@@ -462,8 +462,8 @@ impl DeviceTrait for Device {
         let builder = ndk::audio::AudioStreamBuilder::new()?
             .direction(ndk::audio::AudioDirection::Output)
             .channel_count(channel_count)
-            .format(format);
-            // .performance_mode(ndk::audio::AudioPerformanceMode::LowLatency);
+            .format(format)
+            .performance_mode(ndk::audio::AudioPerformanceMode::LowLatency);
 
         build_output_stream(
             self,
